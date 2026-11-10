@@ -19,6 +19,9 @@ o.undofile = true           -- persistent undo
 o.splitright = true
 o.splitbelow = true
 
+-- jk leaves insert mode
+vim.keymap.set("i", "jk", "<Esc>")
+
 -- clear search highlight with <Esc>
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
@@ -82,6 +85,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.pack.add({
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-telescope/telescope.nvim",
+})
+local ta = require("telescope.actions")
+require("telescope").setup({
+  defaults = { mappings = { i = {
+    ["<C-j>"] = ta.move_selection_next,      -- move through results while typing
+    ["<C-k>"] = ta.move_selection_previous,
+  } } },
 })
 local tb = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", tb.find_files, { desc = "Find files" })
