@@ -28,7 +28,21 @@ vim.filetype.add({ extension = {
   msg = "conf", srv = "conf", action = "conf",  -- gives # comment highlighting
 }})
 
--- Language servers (installed with `uv tool install basedpyright ruff`)
+-- Language servers, installed by Mason into ~/.local/share/nvim/mason
+-- (:Mason to browse/update). Missing ones are installed on startup.
+vim.pack.add({ "https://github.com/mason-org/mason.nvim" })
+require("mason").setup()
+local registry = require("mason-registry")
+registry.refresh(function()
+  for _, name in ipairs({ "basedpyright", "ruff" }) do
+    local pkg = registry.get_package(name)
+    if not pkg:is_installed() then
+      vim.notify("Mason: installing " .. name)
+      pkg:install()
+    end
+  end
+end)
+
 vim.lsp.config("basedpyright", {
   cmd = { "basedpyright-langserver", "--stdio" },
   filetypes = { "python" },

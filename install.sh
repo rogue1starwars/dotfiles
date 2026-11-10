@@ -39,13 +39,7 @@ tar -xzf "$tmp/rg.tar.gz" -C ~/.local/opt
 ln -sf ~/.local/opt/$rgpkg/rg ~/.local/bin/rg
 echo "installed $(~/.local/bin/rg --version | head -1)"
 
-# 2. Language servers (isolated, via uv)
-if ! command -v uv >/dev/null && [ ! -x ~/.local/bin/uv ]; then
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-fi
-UV=$(command -v uv || echo ~/.local/bin/uv)
-"$UV" tool install --upgrade basedpyright
-"$UV" tool install --upgrade ruff
+# 2. Language servers: installed by Mason on first nvim start (needs python3 with venv).
 
 # 3. Configs
 link "$DOT/nvim" ~/.config/nvim
