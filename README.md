@@ -7,7 +7,7 @@ language servers (basedpyright, ruff, yaml-language-server), Telescope for searc
 git clone https://github.com/rogue1starwars/dotfiles ~/dotfiles && ~/dotfiles/install.sh
 ```
 
-- Installs Neovim stable, ripgrep and Node.js LTS to `~/.local` (no sudo).
+- Installs Neovim stable, ripgrep, fd and Node.js LTS to `~/.local` (no sudo).
   `~/.local/bin` must be on `PATH` (Ubuntu's default `~/.profile` adds it).
 - Links `~/.config/nvim` -> `~/dotfiles/nvim` (existing config is backed up to `*.bak.<time>`).
 - Plugins (vim.pack) and language servers (Mason) install on the first `nvim` start;

@@ -39,6 +39,18 @@ tar -xzf "$tmp/rg.tar.gz" -C ~/.local/opt
 ln -sf ~/.local/opt/$rgpkg/rg ~/.local/bin/rg
 echo "installed $(~/.local/bin/rg --version | head -1)"
 
+# 1b'. fd (directory search for Telescope; respects .gitignore)
+fdv=$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/sharkdp/fd/releases/latest | sed 's#.*/tag/##')
+case "$(uname -m)" in
+  x86_64) fdpkg=fd-$fdv-x86_64-unknown-linux-musl ;;
+  *) fdpkg=fd-$fdv-aarch64-unknown-linux-gnu ;;
+esac
+curl -fsSL -o "$tmp/fd.tar.gz" "https://github.com/sharkdp/fd/releases/download/$fdv/$fdpkg.tar.gz"
+rm -rf ~/.local/opt/$fdpkg
+tar -xzf "$tmp/fd.tar.gz" -C ~/.local/opt
+ln -sf ~/.local/opt/$fdpkg/fd ~/.local/bin/fd
+echo "installed $(~/.local/bin/fd --version)"
+
 # 1c. Node.js LTS (Mason needs npm for yaml-language-server)
 case "$(uname -m)" in x86_64) narch=x64 ;; *) narch=arm64 ;; esac
 nodev=$(curl -fsSL https://nodejs.org/dist/index.json | python3 -c 'import json,sys; print(next(r["version"] for r in json.load(sys.stdin) if r["lts"]))')

@@ -90,3 +90,21 @@ vim.keymap.set("n", "<leader>fb", tb.buffers, { desc = "Open buffers" })
 vim.keymap.set("n", "<leader>fh", tb.help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>fr", tb.lsp_references, { desc = "LSP references" })
 vim.keymap.set("n", "<leader>fs", tb.lsp_document_symbols, { desc = "Symbols in file" })
+
+-- Search directories (needs fd) and open the chosen one in the file explorer (netrw)
+vim.keymap.set("n", "<leader>fd", function()
+  tb.find_files({
+    prompt_title = "Find directory",
+    find_command = { "fd", "--type", "d", "--hidden", "--exclude", ".git" },
+    attach_mappings = function(prompt_bufnr)
+      local actions = require("telescope.actions")
+      actions.select_default:replace(function()
+        local entry = require("telescope.actions.state").get_selected_entry()
+        actions.close(prompt_bufnr)
+        if entry then vim.cmd.edit(vim.fn.fnameescape(entry.path or entry[1])) end
+      end)
+      return true
+    end,
+  })
+end, { desc = "Find directory -> explorer" })
+vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "Explorer at current file" })
