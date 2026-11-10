@@ -39,7 +39,18 @@ tar -xzf "$tmp/rg.tar.gz" -C ~/.local/opt
 ln -sf ~/.local/opt/$rgpkg/rg ~/.local/bin/rg
 echo "installed $(~/.local/bin/rg --version | head -1)"
 
-# 2. Language servers: installed by Mason on first nvim start (needs python3 with venv).
+# 1c. Node.js LTS (Mason needs npm for yaml-language-server)
+case "$(uname -m)" in x86_64) narch=x64 ;; *) narch=arm64 ;; esac
+nodev=$(curl -fsSL https://nodejs.org/dist/index.json | python3 -c 'import json,sys; print(next(r["version"] for r in json.load(sys.stdin) if r["lts"]))')
+nodepkg=node-$nodev-linux-$narch
+curl -fsSL -o "$tmp/node.tar.gz" "https://nodejs.org/dist/$nodev/$nodepkg.tar.gz"
+rm -rf ~/.local/opt/node-*-linux-$narch
+tar -xzf "$tmp/node.tar.gz" -C ~/.local/opt
+for b in node npm npx; do ln -sf ~/.local/opt/$nodepkg/bin/$b ~/.local/bin/$b; done
+echo "installed node $(~/.local/bin/node --version)"
+
+# 2. Language servers: installed by Mason on first nvim start
+#    (basedpyright needs python3 with venv; yaml-language-server needs the npm above).
 
 # 3. Configs
 link "$DOT/nvim" ~/.config/nvim

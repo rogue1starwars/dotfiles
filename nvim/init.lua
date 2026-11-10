@@ -34,7 +34,7 @@ vim.pack.add({ "https://github.com/mason-org/mason.nvim" })
 require("mason").setup()
 local registry = require("mason-registry")
 registry.refresh(function()
-  for _, name in ipairs({ "basedpyright", "ruff" }) do
+  for _, name in ipairs({ "basedpyright", "ruff", "yaml-language-server" }) do
     local pkg = registry.get_package(name)
     if not pkg:is_installed() then
       vim.notify("Mason: installing " .. name)
@@ -54,7 +54,14 @@ vim.lsp.config("ruff", {
   filetypes = { "python" },
   root_markers = { "pyproject.toml", "ruff.toml", ".git" },
 })
-vim.lsp.enable({ "basedpyright", "ruff" })
+vim.lsp.config("yamlls", {
+  cmd = { "yaml-language-server", "--stdio" },
+  filetypes = { "yaml" },
+  root_markers = { ".git" },
+  -- schemastore picks schemas by file name (docker-compose.yml, GitHub workflows, ...)
+  settings = { redhat = { telemetry = { enabled = false } } },
+})
+vim.lsp.enable({ "basedpyright", "ruff", "yamlls" })
 
 -- Show errors inline (off by default since 0.11)
 vim.diagnostic.config({ virtual_text = true })
