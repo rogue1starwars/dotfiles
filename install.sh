@@ -54,7 +54,5 @@ echo "installed node $(~/.local/bin/node --version)"
 
 # 3. Configs
 link "$DOT/nvim" ~/.config/nvim
-# ~/.profile: only install if missing (Ubuntu's default already sources .bashrc).
-if [ ! -e ~/.profile ]; then link "$DOT/profile" ~/.profile; fi
 
 echo "done. open a new shell (or: source ~/.profile) so ~/.local/bin is on PATH."
